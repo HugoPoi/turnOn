@@ -25,3 +25,13 @@
 .navbar-text {
   margin-left: 15px;
 }
+
+.light{
+  font-size: 300px;
+  &.on{
+    color: yellow;
+  }
+  &.off{
+    color: black;
+  }
+}
