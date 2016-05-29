@@ -61,5 +61,6 @@
     "decoratorTemplates": "",
     "providerTemplates": "",
     "routeTemplates": ""
-  }
+  },
+  "generator-loopback": {}
 }

@@ -14,6 +14,7 @@ var app = express();
 var server = http.createServer(app);
 var io = socketio(server);
 require('./config/express').default(app);
+app.use(require('./server'));
 require('./routes').default(app);
 require('./io-routes').default(io);
 
