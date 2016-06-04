@@ -10,6 +10,7 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-chart/2.0.26/LineChart.min.css">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
@@ -50,12 +51,17 @@
       <script src="bower_components/angular-socket-io/socket.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/line-chart/2.0.26/LineChart.min.js"></script>
+
     <!-- build:js({.tmp,client}) app/app.js -->
       <script src="app/app.js"></script>
       <!-- injector:js -->
       <script src="components/util/util.module.js"></script>
       <script src="app/app.constant.js"></script>
       <script src="app/arduinoService/arduinoService.service.js"></script>
+      <script src="app/lb-services.js"></script>
       <script src="app/main/main.controller.js"></script>
       <script src="app/main/main.js"></script>
       <script src="components/footer/footer.directive.js"></script>

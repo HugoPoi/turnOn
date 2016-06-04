@@ -22,6 +22,7 @@ var config;
 
 const clientPath = require('./bower.json').appPath || 'client';
 const serverPath = 'server';
+const commonPath = 'common';
 const paths = {
     client: {
         assets: `${clientPath}/assets/**/*`,
@@ -203,7 +204,7 @@ gulp.task('inject', cb => {
 gulp.task('inject:js', () => {
     return gulp.src(paths.client.mainView)
         .pipe(plugins.inject(
-            gulp.src(_.union(paths.client.scripts, ['client/app/app.constant.js', `!${clientPath}/**/*.{spec,mock}.ts`, `!${clientPath}/app/app.ts`]), {read: false})
+            gulp.src(_.union(paths.client.scripts, ['client/app/lb-services.js','client/app/app.constant.js', `!${clientPath}/**/*.{spec,mock}.ts`, `!${clientPath}/app/app.ts`]), {read: false})
                 .pipe(plugins.sort(sortModulesFirst)),
             {
                 starttag: '<!-- injector:js -->',
@@ -290,7 +291,7 @@ gulp.task('copy:constant', () => {
         .pipe(gulp.dest('.tmp/app'));
 })
 
-gulp.task('transpile:client', ['tsd', 'constant', 'copy:constant'], () => {
+gulp.task('transpile:client', ['tsd', 'copy:constant'], () => {
     let tsProject = plugins.typescript.createProject('./tsconfig.client.json');
     return tsProject.src()
         .pipe(plugins.sourcemaps.init())
@@ -358,7 +359,7 @@ gulp.task('start:client', cb => {
 gulp.task('start:server', () => {
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
     config = require(`./${serverPath}/config/environment`);
-    nodemon(`-w ${serverPath} ${serverPath}`)
+    nodemon(`-w ${serverPath} -w ${commonPath} ${serverPath}`)
         .on('log', onServerLog);
 });
 
@@ -377,7 +378,7 @@ gulp.task('start:inspector', () => {
 gulp.task('start:server:debug', () => {
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
         config = require(`./${serverPath}/config/environment`);
-    nodemon(`-w ${serverPath} --debug-brk ${serverPath}`)
+    nodemon(`-w ${serverPath} -w ${commonPath} --debug-brk ${serverPath}`)
         .on('log', onServerLog);
 });
 
@@ -409,7 +410,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('serve', cb => {
-    runSequence(['clean:tmp', 'constant', 'env:all', 'tsd'],
+    runSequence(['clean:tmp', 'constant', 'loopback:service', 'env:all', 'tsd'],
         ['lint:scripts', 'inject'],
         ['wiredep:client'],
         ['transpile:client', 'styles'],
@@ -428,7 +429,7 @@ gulp.task('serve:dist', cb => {
 });
 
 gulp.task('serve:debug', cb => {
-    runSequence(['clean:tmp', 'constant', 'tsd'],
+    runSequence(['clean:tmp', 'constant', 'loopback:service', 'tsd'],
         ['lint:scripts', 'inject'],
         ['wiredep:client'],
         ['transpile:client', 'styles'],
@@ -530,7 +531,7 @@ gulp.task('build', cb => {
 
 gulp.task('clean:dist', () => del([`${paths.dist}/!(.git*|.openshift|Procfile)**`], {dot: true}));
 
-gulp.task('build:client', ['transpile:client', 'styles', 'html', 'constant', 'build:images'], () => {
+gulp.task('build:client', ['transpile:client', 'styles', 'html', 'constant', 'loopback:service', 'build:images'], () => {
     var manifest = gulp.src(`${paths.dist}/${clientPath}/assets/rev-manifest.json`);
 
     var appFilter = plugins.filter('**/app.js', {restore: true});
@@ -581,6 +582,13 @@ gulp.task('constant', function() {
       basename: 'app.constant'
     }))
     .pipe(gulp.dest(`${clientPath}/app/`))
+});
+
+gulp.task('loopback:service', function(){
+  return gulp.src(`${serverPath}/server.js`)
+  .pipe(plugins.loopbackSdkAngular())
+  .pipe(plugins.rename('lb-services.js'))
+  .pipe(gulp.dest(`${clientPath}/app/`));
 });
 
 gulp.task('build:images', () => {

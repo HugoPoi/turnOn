@@ -7,7 +7,9 @@ angular.module('turnOnApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'lbServices',
+  'n3-line-chart'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

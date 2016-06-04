@@ -13,7 +13,8 @@
       "./mixins"
     ]
   },
-  "Note": {
-    "dataSource": "db"
+  "Measure": {
+    "dataSource": "db",
+    "public": true
   }
 }

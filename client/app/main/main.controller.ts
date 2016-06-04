@@ -4,25 +4,31 @@
 
 class MainController {
 
-  constructor($http, arduinoService, $scope) {
-    this.$http = $http;
-    this.awesomeThings = [];
+  temperatures = { test: [] };
+  options;
+  constructor(Measure) {
     var vm = this;
-
-    arduinoService.forward('led', $scope);
-    this.switchLed = function(){
-      arduinoService.emit('switch');
+    Measure.find().$promise.then(function(temps) {
+      temps.forEach(function(p) {
+         p.when = new Date(p.when);
+      });
+      vm.temperatures.test = temps;
+    });
+    vm.options = {
+      margin: {top: 20},
+      series: [
+        {
+          axis: 'y',
+          dataset: 'test',
+          key: 'value',
+          label: 'A line series',
+          color: 'hsla(88, 48%, 48%, 1)',
+          type: ['line'],
+          id: 'mySeries0'
+        }
+      ],
+      axes: {x: {key: 'when', type: 'date'}}
     };
-
-    $scope.$on('socket:led', function(event, data){
-      vm.ledState = data;
-    });
-  }
-
-  $onInit() {
-    this.$http.get('/api/things').then(response => {
-      this.awesomeThings = response.data;
-    });
   }
 
 }
