@@ -7,16 +7,13 @@
 import express from 'express';
 import config from './config/environment';
 import http from 'http';
-import socketio from 'socket.io';
 
 // Setup server
 var app = express();
 var server = http.createServer(app);
-var io = socketio(server);
 require('./config/express').default(app);
 app.use(require('./server'));
 require('./routes').default(app);
-require('./io-routes').default(io);
 
 // Start server
 function startServer() {

@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('turnOnApp', [
-  'btford.socket-io',
   'turnOnApp.constants',
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ngRoute',
   'ui.bootstrap',
+  'ls.LiveSet',
+  'ls.ChangeStream',
   'lbServices',
   'n3-line-chart'
 ])

@@ -34,7 +34,6 @@ class TemperatureService{
     var vm = this;
     this.init(function(){
       vm.portInstance.once('data', function(data){
-        console.log('Received :#' + data + '#');
         var extractTemp = /^S([0-9]+\.[0-9]+)E$/.exec(data);
         if(extractTemp){
           cb(null, parseFloat(extractTemp[1]));
