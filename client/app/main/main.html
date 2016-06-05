@@ -20,4 +20,13 @@
       <linechart data="$ctrl.temperatures" options="$ctrl.options"></linechart>
     </div>
   </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="progress">
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$ctrl.potA5}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$ctrl.potA5}}%">
+          <span class="sr-only">{{$ctrl.potA5}}% Complete</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

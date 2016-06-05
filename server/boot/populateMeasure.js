@@ -26,8 +26,32 @@ module.exports = function(app) {
     });
   });
 
+  function watchPotenciometer(){
+    TemperatureService.init(function(err, serialPort){
+      serialPort.on('data', function(data){
+        var extractValue = /^potA5=([0-9]+)$/.exec(data);
+        if(extractValue){
+          //Update database
+          Measure.findOrCreate({ where: { type: 'pot', from: 'potA5'} }, {
+            value: parseInt(extractValue[1]),
+            type: 'pot',
+            from: 'potA5',
+            when: new Date()
+          }, function(err, instance, created){
+            if(instance && !created){
+              instance.value = parseInt(extractValue[1]);
+              instance.when = new Date();
+              instance.save();
+            }
+          });
+        }
+      });
+    });
+  }
+
   if(!/gulp/.test(process.argv.join())){
     console.log('Start measure job !');
-    job.start();
+    watchPotenciometer();
+    //job.start();
   }
 };
